@@ -6,6 +6,7 @@ import sys
 
 def main():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+    sys.path.insert(0, ROOT_PATH("apps"))
 
     try:
         from django.core.management import execute_from_command_line
@@ -20,7 +21,7 @@ def main():
 
 if __name__ == "__main__":
     try:
-        import settings
+        from settings import ROOT_PATH
     except:
         print("No settings folder found.")
     main()

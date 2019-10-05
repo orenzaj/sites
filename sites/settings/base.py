@@ -15,7 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_PATH = lambda * x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
 PROJECT_ROOT = BASE_PATH("..")
-root = lambda * x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
+ROOT_PATH = lambda * x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
 
 
 # Quick-start development settings - unsuitable for production
