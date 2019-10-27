@@ -12,10 +12,11 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_PATH = lambda * x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
-PROJECT_ROOT = BASE_PATH("..")
-ROOT_PATH = lambda * x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
+def add_new_path(new_path):
+    return lambda * x: os.path.join(os.path.abspath(new_path), *x)
+
+BASE_PATH = add_new_path(os.path.dirname(__file__))
+ROOT_PATH = add_new_path(BASE_PATH(".."))
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,8 +28,9 @@ SECRET_KEY = 'hx*4n_7$liw4%wtzyn0h^)%j%-8dv4e6kx42g7gr-xu+w8-k+2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    "*",
+]
 
 # Application definition
 DJANGO_APPS = [
@@ -43,10 +45,13 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'bootstrap4',
     'corsheaders',
+    'django_extensions',
+    'django_react_templatetags',
     'rest_framework',
 ]
 MY_APPS = [
-    'rhythm',
+    'apps.rhythm',
+    'sites.orenza',
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
 
@@ -63,25 +68,32 @@ DJANGO_MIDDLEWARE = [
 THIRD_PARTY_MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
-MIDDLEWARE = DJANGO_MIDDLEWARE + THIRD_PARTY_MIDDLEWARE
+# MIDDLEWARE = DJANGO_MIDDLEWARE + THIRD_PARTY_MIDDLEWARE
+MIDDLEWARE = THIRD_PARTY_MIDDLEWARE + DJANGO_MIDDLEWARE
 
 ROOT_URLCONF = 'urls'
 
-TEMPLATE_DIRS = [
-    ROOT_PATH("templates"),
+DJANGO_CONTEXT_PROCESSORS = [
+    'django.template.context_processors.debug',
+    'django.template.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
 ]
+THIRD_PARTY_CONTEXT_PROCESSORS = [
+    'django_react_templatetags.context_processors.react_context_processor',
+]
+CONTEXT_PROCESSORS = DJANGO_CONTEXT_PROCESSORS + THIRD_PARTY_CONTEXT_PROCESSORS
+TEMPLATE_DIRS = [
+    ROOT_PATH("frontend"),
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': TEMPLATE_DIRS,
         'APP_DIRS': True,
         'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
+            'context_processors': CONTEXT_PROCESSORS,
         },
     },
 ]
@@ -128,8 +140,3 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 STATIC_URL = '/static/'
-
-# Whitelist frontend server
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-)

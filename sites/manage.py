@@ -1,4 +1,4 @@
-#j!/usr/bin/env python
+#!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
@@ -6,8 +6,6 @@ import sys
 
 def main():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-    sys.path.insert(0, ROOT_PATH("apps"))
-
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -22,6 +20,7 @@ def main():
 if __name__ == "__main__":
     try:
         from settings import ROOT_PATH
+        sys.path.insert(0, ROOT_PATH("backend"))
     except:
         print("No settings folder found.")
     main()
