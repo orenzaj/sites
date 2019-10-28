@@ -12,8 +12,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+
 def add_new_path(new_path):
     return lambda * x: os.path.join(os.path.abspath(new_path), *x)
+
 
 BASE_PATH = add_new_path(os.path.dirname(__file__))
 ROOT_PATH = add_new_path(BASE_PATH(".."))
@@ -45,12 +47,14 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'bootstrap4',
     'corsheaders',
+    'channels',
     'django_extensions',
     'django_react_templatetags',
     'rest_framework',
 ]
 MY_APPS = [
     'apps.rhythm',
+    'apps.chat',
     'sites.orenza',
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
@@ -100,6 +104,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'wsgi.application'
 
+# Channels
+ASGI_APPLICATION = 'urls.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [
+                ("localhost", 6379),
+            ],
+        }
+    }
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -108,18 +125,19 @@ DATABASES = {}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
+pass_validator = "django.contrib.auth.password_validation"
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': ".".join([pass_validator, 'UserAttributeSimilarityValidator']),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': ".".join([pass_validator, 'MinimumLengthValidator']),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': ".".join([pass_validator, 'CommonPasswordValidator']),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': ".".join([pass_validator, "NumericPasswordValidator"]),
     },
 ]
 

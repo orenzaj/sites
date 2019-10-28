@@ -21,6 +21,6 @@ if __name__ == "__main__":
     try:
         from settings import ROOT_PATH
         sys.path.insert(0, ROOT_PATH("backend"))
-    except:
+    except ImportError:
         print("No settings folder found.")
     main()
